@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://chat-server-e9hl.onrender.com"],
+    origin: ["http://localhost:5173", "https://chat-client-orhd.onrender.com"],
     credentials: true,
   })
 );

@@ -28,7 +28,7 @@ const signup = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await userModel.create({
       username,
-      email,
+      email: email.toLowerCase(),
       password: hashedPassword,
       profilePicture,
       about,
@@ -56,7 +56,9 @@ const login = async (req, res) => {
       });
     }
 
-    const userExists = await userModel.findOne({ email }).exec();
+    const userExists = await userModel
+      .findOne({ email: email.toLowerCase() })
+      .exec();
     if (!userExists) {
       return res
         .status(401)
