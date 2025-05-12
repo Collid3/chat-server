@@ -41,6 +41,7 @@ const signup = async (req, res) => {
       username: user.username,
       email: user.email,
       profilePicture: user.profilePicture,
+      createdAt: user.createdAt,
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -78,6 +79,7 @@ const login = async (req, res) => {
       username: userExists.username,
       email: userExists.email,
       profilePicture: userExists.profilePicture,
+      createdAt: userExists.createdAt,
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -143,4 +145,29 @@ const checkAuth = (req, res) => {
   }
 };
 
-module.exports = { signup, login, logout, updateProfile, checkAuth };
+const deleteAccount = async (req, res) => {
+  const userId = req.user._id;
+  if (!userId) {
+    return res
+      .status(401)
+      .json({ message: "Unauthorized access. No Token provided" });
+  }
+
+  const user = await userModel.findOne({ _id: userId }).exec();
+  if (!user) {
+    return res.status(403).json({ message: "User with that id not found" });
+  }
+
+  await userModel.deleteOne({ _id: userId });
+
+  return res.json({ message: "User successfully deleted" });
+};
+
+module.exports = {
+  signup,
+  login,
+  logout,
+  updateProfile,
+  checkAuth,
+  deleteAccount,
+};
